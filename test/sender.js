@@ -3,11 +3,10 @@
  */
 var client = require('../index')();
 var ll = require('lillog');
+var maxmsgs = 200;
+var idxmsg = 0;
 client.connect('127.0.0.1', 61613, null, function () {
-    client.send('/queue/a', 'teste123', null, function () {
-        client.disconnect(function () {
-            ll.log('Finalized');
-        });
-    });
-
+    for (var i = 0; i < 3000; i++) {
+        client.send('/topic/a', 'TESTE:' + i);
+    }
 });
