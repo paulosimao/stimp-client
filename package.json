@@ -1,6 +1,6 @@
 {
   "name": "stimp-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Stomp client in Node.js. Please refer to readme.",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/paulosimao/stimp-client#readme",
   "devDependencies": {
+    "async": "^1.5.0",
     "chai": "^3.4.1",
     "mocha": "^2.3.4"
   },

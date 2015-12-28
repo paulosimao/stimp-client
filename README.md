@@ -36,13 +36,14 @@ For those who want to start fast:
      config: {
          autoack: true
      }
- - autoack:true|false - Tell client if ack should be sent automatically in response to messages received.In case false is set, you can reply to server informing a message was wrongly processed. In this case, message will be moved to deadletter queue in the server.
+ - `autoack`:true|false - Tell client if ack should be sent automatically in response to messages received.In case false is set, you can reply to server informing a message was wrongly processed. In this case, message will be moved to deadletter queue in the server.
 
 Please note this is working fine, but not ready for production yet - testing support is welcome.
 
 ##### TODO (in order of priority):
-- Messages kept in server backend where there is no listener are not yet been forwarded to client
-- Queues and Topics (Ok this is serverside, but be aware)behave the same way at this time (WIP - keep in mind)
+- ~~Messages kept in server backend where there is no listener are not yet been forwarded to client~~
+- ~~Queues and Topics (Ok this is serverside, but be aware)behave the same way at this time (WIP - keep in mind)~~
 - Transactions are not supported yet
 - Client not validated against other servers such as AMQ or Rabbit
 - There is pleny of space for performance improvement.
+- **Testing testing testing...**

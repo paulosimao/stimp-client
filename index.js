@@ -58,6 +58,7 @@ module.exports = function () {
             ret.config = config;
             if (!ret.config) ret.config = {};
             if (!ret.config.timeout)ret.config.timeout = 5000;
+            if (!ret.config.autoack)ret.config.autoack = true;
 
             ret.init(new net.Socket());
             ret.parser = stimpcommons.createparser(ret.sock);
@@ -93,7 +94,12 @@ module.exports = function () {
                 var msg = stimpcommons.createmsg(stimpcommons.CMD_DISCONNECT);
                 ret.addtobuffer(msg);
                 if (cb) {
-                    ret.once(msg.headers.receipt, cb);
+                    ret.eventemitter.once(msg.headers.receipt, function () {
+                        ret.sock.end();
+                        if (cb) {
+                            cb();
+                        }
+                    });
                 }
                 ret.sock.write(msg.torawmsg());
             }
@@ -134,7 +140,7 @@ module.exports = function () {
             //ll.debug(JSON.stringify(msg));
 
             if (cb) {
-                ret.once(msg.headers['receipt'], cb);
+                ret.eventemitter.once(msg.headers['receipt'], cb);
             }
 
 
@@ -143,7 +149,7 @@ module.exports = function () {
         sendack: function (msg, cb) {
             var ackmsg = stimpcommons.createmsg(stimpcommons.CMD_ACK);
             ackmsg.addheader('id', msg.headers['message-id']);
-            ret.sock.write(ackmsg.torawmsg(),cb);
+            ret.sock.write(ackmsg.torawmsg(), cb);
         },
         sendnack: function (msg, cb) {
             var nackmsg = stimpcommons.createmsg(stimpcommons.CMD_NACK);
