@@ -12,7 +12,9 @@ module.exports = function () {
         uuid: stimpcommons.uuid(),
         parser: null,
         socksubscriptions: {},
-        config: {},
+        config: {
+            autoack: true
+        },
         msgbuffer: {},
         msgbufferlength: 0,
         eventemitter: new events.EventEmitter(),
@@ -25,9 +27,11 @@ module.exports = function () {
         },
         onmessage: function (msg) {
             ret.eventemitter.emit('message', msg.body, msg);
-            var ackmsg = stimpcommons.createmsg(stimpcommons.CMD_ACK);
-            ackmsg.addheader('id', msg.headers['message-id']);
-            ret.sock.write(ackmsg.torawmsg());
+            if (ret.config.autoack) {
+                var ackmsg = stimpcommons.createmsg(stimpcommons.CMD_ACK);
+                ackmsg.addheader('id', msg.headers['message-id']);
+                ret.sock.write(ackmsg.torawmsg());
+            }
         },
         init: function (sock) {
             ret.sock = sock;
@@ -136,13 +140,25 @@ module.exports = function () {
 
             ret.sock.write(msg.torawmsg());
         },
+        sendack: function (msg, cb) {
+            var ackmsg = stimpcommons.createmsg(stimpcommons.CMD_ACK);
+            ackmsg.addheader('id', msg.headers['message-id']);
+            ret.sock.write(ackmsg.torawmsg(),cb);
+        },
+        sendnack: function (msg, cb) {
+            var nackmsg = stimpcommons.createmsg(stimpcommons.CMD_NACK);
+            nackmsg.addheader('id', msg.headers['message-id']);
+            ret.sock.write(nackmsg.torawmsg(), cb);
+        },
+
+        //TODO IMPLEMENT THESE METHODS
         starttx: function () {
         },
         committx: function () {
         },
         rollbacktx: function () {
         }
-    }
+    };
     return ret;
 };
 
